@@ -5,9 +5,7 @@ interface DelayCardProps {
 }
 
 /**
- * Displays the train's current accumulated delay.
- * Note: Current delay is displayed for operational awareness and is NEVER
- * added again to the backend's ETA on the frontend.
+ * Displays the train's total predicted delay (weather + incident/congestion + ML).
  */
 export const DelayCard: React.FC<DelayCardProps> = ({
   currentDelayMinutes,
@@ -41,7 +39,7 @@ export const DelayCard: React.FC<DelayCardProps> = ({
       <div className="delay-primary-value">{displayValue}</div>
 
       <p className="delay-footnote">
-        Reflected in current position &mdash; not double-counted in final ETA.
+        Total predicted delay from weather and route conditions.
       </p>
     </div>
   );

@@ -212,20 +212,21 @@ class ETAServiceTest {
     }
 
     @Test
-    @DisplayName("2. Train currently delayed - currentDelayMinutes is NOT double-counted")
+    @DisplayName("2. Train currently delayed - currentDelayMinutes reflects total route delay and is NOT double-counted")
     void testTrainCurrentlyDelayedDoesNotDoubleCountDelay() {
-        // Run 1: Train at Surat->Bharuch (40% progress) with 0 min delay
+        // Run 1: Train at Surat->Bharuch (40% progress) with 0 min past delay
         currentState12901.setCurrentDelayMinutes(0);
         DashboardResponse onTimeDashboard = dashboardService.getTrainDashboard("12901", REFERENCE_TIME);
 
-        // Run 2: Train at the EXACT SAME position (Surat->Bharuch, 40% progress) with 18 min delay
+        // Run 2: Train at the EXACT SAME position (Surat->Bharuch, 40% progress) with 18 min past delay
         currentState12901.setCurrentDelayMinutes(18);
         DashboardResponse delayedDashboard = dashboardService.getTrainDashboard("12901", REFERENCE_TIME);
 
-        // Current delay is reported in currentState for the frontend dashboard...
-        assertEquals(18, delayedDashboard.currentState().currentDelayMinutes());
+        // Current delay reflects the total predicted delay along the remaining route (0 when no weather/incidents)
+        assertEquals(0, delayedDashboard.currentState().currentDelayMinutes());
+        assertEquals("17:33", delayedDashboard.eta().scheduledArrival());
 
-        // ...but is NOT added again to remainingMinutes or estimatedArrival!
+        // And past delay is NOT added again to remainingMinutes or estimatedArrival!
         assertEquals(onTimeDashboard.eta().remainingMinutes(), delayedDashboard.eta().remainingMinutes());
         assertEquals(onTimeDashboard.eta().estimatedArrival(), delayedDashboard.eta().estimatedArrival());
     }

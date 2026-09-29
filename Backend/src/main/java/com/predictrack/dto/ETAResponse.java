@@ -5,6 +5,7 @@ package com.predictrack.dto;
  */
 public record ETAResponse(
         String destination,
+        String scheduledArrival,
         String estimatedArrival,
         int remainingMinutes
 ) {

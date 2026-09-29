@@ -257,7 +257,7 @@ public class DataInitializer implements CommandLineRunner {
                 s.get("ST"),
                 s.get("BH"),
                 40,
-                18,
+                23,
                 now,
                 s
         );
@@ -284,7 +284,7 @@ public class DataInitializer implements CommandLineRunner {
                 s.get("RTM"),
                 s.get("KOTA"),
                 50,
-                5,
+                6,
                 now,
                 s
         );
@@ -311,7 +311,7 @@ public class DataInitializer implements CommandLineRunner {
                 s.get("AGC"),
                 s.get("DHO"),
                 25,
-                0,
+                15,
                 now,
                 s
         );
@@ -338,7 +338,7 @@ public class DataInitializer implements CommandLineRunner {
                 s.get("WADI"),
                 s.get("SUR"),
                 60,
-                22,
+                2,
                 now,
                 s
         );
@@ -365,7 +365,7 @@ public class DataInitializer implements CommandLineRunner {
                 s.get("BBS"),
                 s.get("BAM"),
                 30,
-                14,
+                20,
                 now,
                 s
         );

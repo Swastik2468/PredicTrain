@@ -32,6 +32,7 @@ export interface BackendCurrentState {
 
 export interface BackendETA {
   destination: string;
+  scheduledArrival?: string;
   estimatedArrival: string;
   remainingMinutes: number;
 }
@@ -102,6 +103,7 @@ export interface CurrentState {
 
 export interface ETA {
   destination: string;
+  scheduledArrival: string;
   estimatedArrival: string;
   remainingMinutes: number;
 }

@@ -55,11 +55,15 @@ public class DashboardService {
 
         String lastUpdatedFormatted = referenceTime.format(TIME_FORMATTER);
 
+        int totalDelayMinutes = result.delayBreakdown().weatherDelayMinutes()
+                + result.delayBreakdown().incidentDelayMinutes()
+                + result.delayBreakdown().mlCorrectionMinutes();
+
         CurrentStateResponse currentStateResponse = new CurrentStateResponse(
                 state.getCurrentStation().getStationName(),
                 nextStationName,
                 state.getProgressPercentage(),
-                state.getCurrentDelayMinutes(),
+                totalDelayMinutes,
                 lastUpdatedFormatted
         );
 

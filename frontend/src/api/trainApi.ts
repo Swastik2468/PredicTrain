@@ -79,7 +79,6 @@ function mapBackendResponseToDashboardData(
   const currentStation = raw.currentState?.currentStation || source;
   const nextStation = raw.currentState?.nextStation || destination;
   const progressPercentage = raw.currentState?.progressPercentage ?? 0;
-  const currentDelayMinutes = raw.currentState?.currentDelayMinutes ?? 0;
   const lastUpdated = raw.currentState?.lastUpdated || 'Just now';
 
   const remainingMinutes = raw.eta?.remainingMinutes ?? 0;
@@ -95,6 +94,16 @@ function mapBackendResponseToDashboardData(
     bd?.mlCorrectionMinutes !== undefined ? bd.mlCorrectionMinutes : 0;
   const totalRemainingMinutes =
     bd?.totalRemainingMinutes ?? remainingMinutes;
+
+  const totalDelayMinutes =
+    weatherDelayMinutes + incidentDelayMinutes + (mlCorrectionMinutes ?? 0);
+  const currentDelayMinutes = bd
+    ? totalDelayMinutes
+    : (raw.currentState?.currentDelayMinutes ?? 0);
+
+  const scheduledArrival =
+    raw.eta?.scheduledArrival ||
+    computeScheduledArrivalFallback(estimatedArrival, currentDelayMinutes);
 
   const upcomingStations: StationETA[] = (raw.upcomingStations || []).map(
     (s) => ({
@@ -132,6 +141,7 @@ function mapBackendResponseToDashboardData(
     },
     eta: {
       destination: raw.eta?.destination || destination,
+      scheduledArrival,
       estimatedArrival,
       remainingMinutes,
     },
@@ -147,6 +157,26 @@ function mapBackendResponseToDashboardData(
     explanations,
     routeTimeline,
   };
+}
+
+/**
+ * Fallback helper that derives the official scheduled arrival (HH:mm)
+ * by subtracting total delay minutes from estimatedArrival when not explicitly provided.
+ */
+function computeScheduledArrivalFallback(
+  estimatedArrival: string,
+  delayMinutes: number
+): string {
+  const match = estimatedArrival.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) {
+    return estimatedArrival;
+  }
+  const hours = parseInt(match[1], 10);
+  const mins = parseInt(match[2], 10);
+  const totalMins = ((hours * 60 + mins - delayMinutes) % 1440 + 1440) % 1440;
+  const schedHours = String(Math.floor(totalMins / 60)).padStart(2, '0');
+  const schedMins = String(totalMins % 60).padStart(2, '0');
+  return `${schedHours}:${schedMins}`;
 }
 
 /**

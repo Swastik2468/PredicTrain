@@ -102,9 +102,11 @@ public class ETAService {
 
         // Edge case: Train has already reached the final destination
         if (remainingRoute.size() <= 1) {
+            String formattedNow = referenceTime.format(TIME_FORMATTER);
             ETAResponse etaResponse = new ETAResponse(
                     finalDestinationStation.getStationName(),
-                    referenceTime.format(TIME_FORMATTER),
+                    formattedNow,
+                    formattedNow,
                     0
             );
             DelayBreakdownResponse breakdown = new DelayBreakdownResponse(0, 0, 0, 0, 0);
@@ -210,10 +212,13 @@ public class ETAService {
                 totalIncidentDelayMinutes
         );
 
-        // Step 10: Total remaining journey time (DO NOT add currentDelayMinutes!)
+        // Baseline (Official IRCTC Scheduled Arrival without weather/incident delays)
+        int baselineMinutes = totalRemainingRunningMinutes + totalRemainingDwellMinutes;
+        LocalTime scheduledEtaTime = referenceTime.plusMinutes(baselineMinutes);
+
+        // Step 10: Total remaining journey time
         int totalRemainingMinutes =
-                totalRemainingRunningMinutes
-                        + totalRemainingDwellMinutes
+                baselineMinutes
                         + totalWeatherDelayMinutes
                         + totalIncidentDelayMinutes
                         + mlCorrectionMinutes;
@@ -223,6 +228,7 @@ public class ETAService {
 
         ETAResponse etaResponse = new ETAResponse(
                 finalDestinationStation.getStationName(),
+                scheduledEtaTime.format(TIME_FORMATTER),
                 finalEtaTime.format(TIME_FORMATTER),
                 totalRemainingMinutes
         );

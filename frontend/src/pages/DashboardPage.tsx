@@ -68,7 +68,10 @@ export const DashboardPage: React.FC = () => {
       {/* 5. Delay Breakdown + Why is my train delayed? */}
       <div className="dashboard-two-col-grid">
         <div className="dashboard-col-stack">
-          <DelayBreakdown breakdown={data.delayBreakdown} />
+          <DelayBreakdown
+            breakdown={data.delayBreakdown}
+            scheduledArrival={data.eta.scheduledArrival}
+          />
           <DelayExplanation explanations={data.explanations} />
         </div>
 

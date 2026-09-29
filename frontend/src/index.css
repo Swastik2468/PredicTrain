@@ -628,6 +628,13 @@ body {
 }
 
 /* DelayBreakdown */
+.breakdown-toggle-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
 .breakdown-rows {
   display: flex;
   flex-direction: column;
