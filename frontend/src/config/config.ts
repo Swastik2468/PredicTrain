@@ -1,8 +1,11 @@
 /**
  * Centralized frontend configuration for PredicTrack.
  */
-export const API_BASE_URL: string =
-  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const DEFAULT_API_BASE_URL = 'https://predictrain.onrender.com';
+
+export const API_BASE_URL: string = (
+  import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL
+).replace(/\/+$/, '');
 
 export const USE_MOCK_API: boolean =
   import.meta.env.VITE_USE_MOCK_API === 'true';
